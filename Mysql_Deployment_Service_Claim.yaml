@@ -1,0 +1,74 @@
+apiVersion: v1                         
+kind: Service                          
+metadata:                              
+  name: mysql                          
+  labels:                              
+    app: drupal                        
+spec:                                  
+  ports:                               
+    - port: 3306                       
+  selector:                            
+    app: drupal                        
+    tier: mysql                        
+  clusterIP: None                      
+---                                    
+apiVersion: v1                         
+kind: PersistentVolumeClaim            
+metadata:                              
+  name: nfs-pvc2                       
+  labels:                              
+    app: drupal                        
+spec:                                  
+  accessModes:                         
+    - ReadWriteMany                    
+  resources:                           
+    requests:                          
+      storage: 1Gi                     
+---                                    
+apiVersion: apps/v1                    
+kind: Deployment                       
+metadata:                              
+  name: mysql                          
+  labels:                              
+    app: drupal                        
+spec:                                  
+  selector:                            
+    matchLabels:                       
+      app: drupal                      
+      tier: mysql                      
+  strategy:                            
+    type: Recreate                     
+  template:                            
+    metadata:                          
+      labels:                          
+        app: drupal                    
+        tier: mysql                    
+    spec:                              
+      containers:                      
+      - image: mysql:5.6               
+        name: mysql                    
+        env:                           
+        - name: MYSQL_ROOT_PASSWORD    
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: root_password                  
+        - name: MYSQL_DATABASE         
+          value: drupal                
+        - name: MYSQL_USER             
+          value: jose                  
+        - name: MYSQL_PASSWORD         
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: password_jose                   
+        ports:                         
+        - containerPort: 3306          
+          name: mysql                  
+        volumeMounts:                  
+        - name: mysql-pvc              
+          mountPath: /var/lib/mysql    
+      volumes:                         
+      - name: mysql-pvc                
+        persistentVolumeClaim:         
+          claimName: nfs-pvc2          

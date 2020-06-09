@@ -1,4 +1,4 @@
-EJECUTAR EN TODAS LAS M¡QUINAS
+EJECUTAR EN TODAS LAS M√ÅQUINAS
 
 swapoff -a
 nano /etc/fstab
@@ -12,7 +12,7 @@ sysctl --system
 setenforce 0
 
 yum install -y Docker
-systemctl enable docker && systemctl start Docker
+systemctl enable docker && systemctl start docker
 
 
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
@@ -40,7 +40,7 @@ kubectl apply -f https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version
 
 EJECUTAR EN TODOS LOS NODOS
 
-Este comando lo conseguÌamos a travÈs de kubeadm init
+Este comando lo consegu√≠amos a trav√©s de kubeadm init
 
 kubeadm join 192.168.1.90:6443 --token 0gx03i.bkjfviauhce6q3ns --discovery
 -token-ca-cert-hash

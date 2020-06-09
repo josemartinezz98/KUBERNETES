@@ -11,7 +11,7 @@ sysctl --system
 
 setenforce 0
 
-yum install -y Docker
+yum install -y docker
 systemctl enable docker && systemctl start docker
 
 
